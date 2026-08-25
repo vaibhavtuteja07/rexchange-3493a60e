@@ -16,7 +16,8 @@ export interface Listing {
   description: string;
   poster_name: string;
   poster_year: string;
-  contact: string;
+  // Contact is never part of the public feed payload; fetch it on demand.
+  contact?: string;
   exchange_count: number;
   trust_tier: string;
   created_at: string;
