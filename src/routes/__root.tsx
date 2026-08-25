@@ -125,8 +125,17 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-      <Outlet />
+      <div className="flex min-h-screen flex-col">
+        <SiteHeader />
+        <main className="flex-1">
+          {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+          <Outlet />
+        </main>
+        <footer className="border-t border-border/70 py-8 text-center text-xs text-muted-foreground">
+          RExchange · built for campus, powered by trust
+        </footer>
+      </div>
+      <Toaster position="top-center" />
     </QueryClientProvider>
   );
 }
