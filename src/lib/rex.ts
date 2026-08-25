@@ -32,6 +32,9 @@ const STOP_WORDS = new Set([
   "a","an","the","for","to","of","and","or","my","me","i","is","are","need","needed","needs",
   "looking","want","wanted","anyone","some","with","on","in","at","it","this","that","can",
   "please","help","have","has","get","got","will","would","if","you","your","from","by","be",
+  // generic time/logistics words — they create false matches between unrelated posts
+  "morning","evening","afternoon","night","today","tomorrow","weekend","week","day","days",
+  "year","years","hour","hours","time","soon","back","return","same","also","only","just","one","two",
 ]);
 
 export function keywordsOf(text: string): string[] {
