@@ -60,7 +60,11 @@ export function PostForm({ listings }: { listings: Listing[] }) {
       qc.invalidateQueries({ queryKey: ["listings"] });
     },
     onError: (err) => {
-      toast.error(err instanceof z.ZodError ? err.issues[0].message : "Could not post — try again");
+      toast.error(
+        err instanceof z.ZodError
+          ? (err.issues[0]?.message ?? "Check the form")
+          : "Could not post — try again",
+      );
     },
   });
 
