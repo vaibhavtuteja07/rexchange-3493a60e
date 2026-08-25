@@ -54,7 +54,11 @@ export function matchScore(requestText: string, offer: Listing): number {
   let score = 0;
   for (const word of needle) {
     if (hay.has(word)) score += 2;
-    else if ([...hay].some((h) => h.startsWith(word) || word.startsWith(h))) score += 1;
+    else if (
+      word.length >= 5 &&
+      [...hay].some((h) => h.length >= 5 && (h.startsWith(word) || word.startsWith(h)))
+    )
+      score += 1;
   }
   return score;
 }
