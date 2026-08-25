@@ -1,4 +1,6 @@
+import { useState } from "react";
 import { Package, Wrench, NotebookPen, HandHeart, Search, ArrowRight } from "lucide-react";
+import { getListingContact } from "@/lib/rex.functions";
 import { cn } from "@/lib/utils";
 import { TrustBadge } from "./TrustBadge";
 import { findMatches, timeAgo, type Listing } from "@/lib/rex";
@@ -18,6 +20,8 @@ export function ListingCard({
   listing: Listing;
   allListings?: Listing[];
 }) {
+  const [contact, setContact] = useState<string | null>(null);
+  const [loadingContact, setLoadingContact] = useState(false);
   const isRequest = listing.type === "request";
   const Icon = CATEGORY_ICON[listing.category] ?? Package;
   const matches = isRequest
@@ -77,8 +81,28 @@ export function ListingCard({
           <p className="truncate text-sm font-semibold text-foreground">{listing.poster_name}</p>
           <p className="truncate text-xs text-muted-foreground">
             {listing.poster_year}
-            {listing.contact ? ` · ${listing.contact}` : ""}
+            {contact ? ` · ${contact}` : ""}
           </p>
+          {contact === null && (
+            <button
+              type="button"
+              disabled={loadingContact}
+              className="mt-1 text-xs font-medium text-forest hover:underline disabled:opacity-60"
+              onClick={async () => {
+                setLoadingContact(true);
+                try {
+                  const res = await getListingContact({ data: { listingId: listing.id } });
+                  setContact(res.contact || "No contact provided");
+                } catch {
+                  setContact("Contact unavailable");
+                } finally {
+                  setLoadingContact(false);
+                }
+              }}
+            >
+              {loadingContact ? "Loading…" : "Show contact"}
+            </button>
+          )}
         </div>
         <TrustBadge exchangeCount={listing.exchange_count} tier={listing.trust_tier} />
       </div>
