@@ -14,7 +14,152 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      events: {
+        Row: {
+          category: string
+          created_at: string
+          event_date: string
+          id: string
+          interested_count: number
+          location: string
+          title: string
+        }
+        Insert: {
+          category?: string
+          created_at?: string
+          event_date: string
+          id?: string
+          interested_count?: number
+          location?: string
+          title: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          event_date?: string
+          id?: string
+          interested_count?: number
+          location?: string
+          title?: string
+        }
+        Relationships: []
+      }
+      listings: {
+        Row: {
+          category: string
+          contact: string
+          created_at: string
+          description: string
+          exchange_count: number
+          id: string
+          poster_name: string
+          poster_year: string
+          title: string
+          trust_tier: string
+          type: string
+        }
+        Insert: {
+          category: string
+          contact?: string
+          created_at?: string
+          description?: string
+          exchange_count?: number
+          id?: string
+          poster_name: string
+          poster_year?: string
+          title: string
+          trust_tier?: string
+          type?: string
+        }
+        Update: {
+          category?: string
+          contact?: string
+          created_at?: string
+          description?: string
+          exchange_count?: number
+          id?: string
+          poster_name?: string
+          poster_year?: string
+          title?: string
+          trust_tier?: string
+          type?: string
+        }
+        Relationships: []
+      }
+      need_posts: {
+        Row: {
+          author_name: string
+          body: string
+          created_at: string
+          id: string
+        }
+        Insert: {
+          author_name: string
+          body: string
+          created_at?: string
+          id?: string
+        }
+        Update: {
+          author_name?: string
+          body?: string
+          created_at?: string
+          id?: string
+        }
+        Relationships: []
+      }
+      need_replies: {
+        Row: {
+          author_name: string
+          body: string
+          created_at: string
+          id: string
+          post_id: string
+        }
+        Insert: {
+          author_name: string
+          body: string
+          created_at?: string
+          id?: string
+          post_id: string
+        }
+        Update: {
+          author_name?: string
+          body?: string
+          created_at?: string
+          id?: string
+          post_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "need_replies_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "need_posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      watch_keywords: {
+        Row: {
+          created_at: string
+          device_id: string
+          id: string
+          keyword: string
+        }
+        Insert: {
+          created_at?: string
+          device_id: string
+          id?: string
+          keyword: string
+        }
+        Update: {
+          created_at?: string
+          device_id?: string
+          id?: string
+          keyword?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
