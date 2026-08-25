@@ -165,7 +165,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      adjust_event_interest: {
+        Args: { _delta: number; _event_id: string }
+        Returns: number
+      }
     }
     Enums: {
       [_ in never]: never

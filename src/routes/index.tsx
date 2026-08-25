@@ -39,7 +39,9 @@ function Home() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("listings")
-        .select("*")
+        .select(
+          "id, title, category, type, description, poster_name, poster_year, exchange_count, trust_tier, created_at",
+        )
         .order("created_at", { ascending: false });
       if (error) throw error;
       return (data ?? []) as Listing[];
