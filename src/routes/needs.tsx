@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Skeleton } from "@/components/ui/skeleton";
 import { timeAgo } from "@/lib/rex";
+import { createNeedPost, createNeedReply } from "@/lib/rex.functions";
 
 export const Route = createFileRoute("/needs")({
   head: () => ({
@@ -74,10 +75,7 @@ function NeedBoard() {
       const cleanBody = body.trim().slice(0, 600);
       if (cleanName.length < 2) throw new Error("Add your name");
       if (cleanBody.length < 5) throw new Error("Say a bit more about what you need");
-      const { error } = await supabase
-        .from("need_posts")
-        .insert({ author_name: cleanName, body: cleanBody });
-      if (error) throw error;
+      await createNeedPost({ data: { authorName: cleanName, body: cleanBody } });
     },
     onSuccess: () => {
       setBody("");
@@ -145,10 +143,9 @@ function NeedThread({ post, replies }: { post: NeedPost; replies: NeedReply[] })
       const cleanName = name.trim().slice(0, 60);
       const cleanBody = body.trim().slice(0, 600);
       if (cleanName.length < 2 || cleanBody.length < 2) throw new Error("Add your name and a reply");
-      const { error } = await supabase
-        .from("need_replies")
-        .insert({ post_id: post.id, author_name: cleanName, body: cleanBody });
-      if (error) throw error;
+      await createNeedReply({
+        data: { postId: post.id, authorName: cleanName, body: cleanBody },
+      });
     },
     onSuccess: () => {
       setBody("");

@@ -66,10 +66,10 @@ function EventsPage() {
         : [...interested, event.id];
       window.localStorage.setItem(INTEREST_KEY, JSON.stringify(next));
       setInterested(next);
-      const { error } = await supabase
-        .from("events")
-        .update({ interested_count: Math.max(0, event.interested_count + (isOn ? -1 : 1)) })
-        .eq("id", event.id);
+      const { error } = await supabase.rpc("adjust_event_interest", {
+        _event_id: event.id,
+        _delta: isOn ? -1 : 1,
+      });
       if (error) throw error;
     },
     onSuccess: () => qc.invalidateQueries({ queryKey: ["events"] }),

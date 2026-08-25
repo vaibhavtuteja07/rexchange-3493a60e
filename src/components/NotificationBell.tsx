@@ -6,6 +6,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { getDeviceId, textMatchesKeywords, timeAgo, type Listing } from "@/lib/rex";
+import {
+  addWatchKeyword,
+  listWatchKeywords,
+  removeWatchKeyword,
+} from "@/lib/rex.functions";
 
 // Real push notifications are designed for a future upgrade — this is an in-app
 // watchlist badge only.
@@ -32,13 +37,7 @@ export function NotificationBell() {
     queryKey: ["watch-keywords", deviceId],
     enabled: !!deviceId,
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("watch_keywords")
-        .select("id, keyword")
-        .eq("device_id", deviceId!)
-        .order("created_at", { ascending: true });
-      if (error) throw error;
-      return (data ?? []) as WatchKeyword[];
+      return (await listWatchKeywords({ data: { deviceId: deviceId! } })) as WatchKeyword[];
     },
   });
 
@@ -71,10 +70,7 @@ export function NotificationBell() {
     mutationFn: async (keyword: string) => {
       const clean = keyword.trim().slice(0, 40);
       if (clean.length < 2) throw new Error("too short");
-      const { error } = await supabase
-        .from("watch_keywords")
-        .insert({ device_id: getDeviceId(), keyword: clean });
-      if (error) throw error;
+      await addWatchKeyword({ data: { deviceId: getDeviceId(), keyword: clean } });
     },
     onSuccess: () => {
       setDraft("");
@@ -84,8 +80,7 @@ export function NotificationBell() {
 
   const removeKeyword = useMutation({
     mutationFn: async (id: string) => {
-      const { error } = await supabase.from("watch_keywords").delete().eq("id", id);
-      if (error) throw error;
+      await removeWatchKeyword({ data: { deviceId: getDeviceId(), id } });
     },
     onSuccess: () => qc.invalidateQueries({ queryKey: ["watch-keywords"] }),
   });
